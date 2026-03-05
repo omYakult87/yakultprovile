@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Yakult Shader XV1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial;background:#0a0a0a;color:#e5e7eb;overflow-x:hidden}
+header{text-align:center;padding:50px 20px;background:#000;border-bottom:2px solid #111}
+main{max-width:1000px;margin:auto;padding:40px 20px}
+h1{margin:0} h2{margin-top:0;color:#38bdf8}
+
+.card-wrapper{
+  background:linear-gradient(90deg,#ff4d4d,#ffe44d,#4dff4d);
+  padding:2px;border-radius:14px;margin-bottom:40px;
+  opacity:0;transform:translateX(-80px);transition:.8s;
+}
+.card-wrapper.show{opacity:1;transform:translateX(0)}
+
+.card{
+  background:#000;border-radius:12px;padding:24px;
+  display:flex;gap:20px;
+  align-items:flex-start;
+  transition:2s ease;
+}
+.card.active{background:linear-gradient(90deg,#000,#331111,#333311,#113311)}
+
+.content{flex:3}
+.actions{
+  flex:1;display:flex;flex-direction:column;
+  gap:12px;align-items:center;justify-content:flex-start;
+  max-height:300px;overflow-y:auto;
+}
+
+.btn{
+  padding:10px 14px;background:#111;color:#fff;
+  border:1px solid #333;border-radius:6px;
+  cursor:pointer;width:160px;text-align:center;
+}
+
+.avatar{width:60px;height:60px;border-radius:50%;border:3px solid #000;display:none}
+
+.preview-collage{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.preview-collage img{width:100%;border-radius:8px;border:2px solid #000}
+
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;justify-content:center;align-items:center;z-index:999}
+.popup-box{background:#000;border:2px solid #ff4d4d;border-radius:12px;padding:20px;text-align:center}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Yakult Shader XV1</h1>
+<p>Shader Developer & VPS Seller</p>
+</header>
+
+<main>
+
+<!-- PROFILE -->
+<div class="card-wrapper">
+<div class="card" id="profileCard">
+<div class="content">
+<h2>Profile</h2>
+<p>Developer shader Minecraft & seller VPS.</p>
+</div>
+<div class="actions">
+<button class="btn" id="profileBtn">Profile</button>
+<img id="avatar" class="avatar">
+<a href="#" class="btn" id="contactBtn" style="display:none">Hubungi</a>
+</div>
+</div>
+</div>
+
+<!-- SHADER -->
+<div class="card-wrapper" id="shaderSlide1">
+<div class="card">
+<div class="content">
+<h2>Yakult Shader XV1</h2>
+<ul>
+<li>Ringan</li>
+<li>Stabil</li>
+<li>Low-end support</li>
+</ul>
+</div>
+<div class="actions">
+<button class="btn" onclick="openShader()">Preview</button>
+<button class="btn" onclick="openShader()">Download</button>
+</div>
+</div>
+</div>
+
+<div class="card-wrapper" id="shaderSlide2" style="display:none;">
+<div class="card">
+<div class="content preview-collage">
+<img id="shader1">
+<img id="shader2">
+<img id="shader3">
+</div>
+<div class="actions">
+<a id="downloadXV1" class="btn" download>Download XV1</a>
+<button class="btn" onclick="openPopup()">Download XV2</button>
+<a href="#" class="btn">Hubungi</a>
+</div>
+</div>
+</div>
+
+<!-- VPS -->
+<div class="card-wrapper">
+<div class="card" id="vpsCard">
+<div class="content">
+<h2>VPS</h2>
+<p>Klik tombol untuk lihat paket</p>
+
+<div id="vpsList" style="display:none;margin-top:15px">
+<h3>• 15k</h3>
+<ul>
+<li>Core 8 AMD EPYC 7001</li>
+<li>16 GB RAM</li>
+<li>Privat server</li>
+<li>Stabil anti lemot</li>
+<li>Garansi 15 hari</li>
+<li>Node JS terbaru</li>
+<li>Support Minecraft server / bot</li>
+<li>Universal egg / Docker</li>
+<li>Setup mudah</li>
+</ul>
+
+<h3>• 20k</h3>
+<ul>
+<li>Core 10 Intel Xeon</li>
+<li>32 GB RAM</li>
+<li>Privat server</li>
+<li>Stabil anti lemot</li>
+<li>Universal egg</li>
+<li>Garansi 15 hari</li>
+<li>Support Minecraft server / bot</li>
+<li>Node JS terbaru</li>
+<li>Setup mudah</li>
+</ul>
+</div>
+</div>
+
+<div class="actions">
+<button class="btn" id="vpsBtn">Lihat VPS</button>
+</div>
+</div>
+</div>
+
+<!-- KONTAK -->
+<div class="card-wrapper">
+<div class="card">
+<div class="content">
+<h2>Kontak</h2>
+<p>WhatsApp / Telegram</p>
+</div>
+<div class="actions">
+<a href="#" class="btn" id="waLink">WA</a>
+<a href="#" class="btn" id="tgLink">Telegram</a>
+</div>
+</div>
+</div>
+
+</main>
+
+<footer style="text-align:center;padding:20px;background:#000;border-top:2px solid #111">
+© 2026 Yakult Shader XV1
+</footer>
+
+<!-- POPUP -->
+<div id="premiumPopup" class="popup-overlay">
+<div class="popup-box">
+<h3>Premium Akses</h3>
+<p>Hubungi admin untuk mendapatkan shader XV2</p>
+<button class="btn" onclick="closePopup()">Tutup</button>
+</div>
+</div>
+
+<script>
+// === FILE & IMAGE PATH ===
+const files = {
+  shaderXV1: "assets/file/shader-xv1.zip",
+  shaderXV2: "", 
+  avatar: "assets/img/avatar.png",
+  shader1: "assets/img/shader1.jpg",
+  shader2: "assets/img/shader2.jpg",
+  shader3: "assets/img/shader3.jpg"
+};
+
+// === CONTACT ===
+const contacts = {
+  wa: "6288994140281",
+  tg: "momonbotw"
+};
+
+// ANIMASI SCROLL
+const cards=document.querySelectorAll(".card-wrapper");
+const obs=new IntersectionObserver(e=>{
+e.forEach(x=>{if(x.isIntersecting)x.target.classList.add("show")})
+},{threshold:.2});
+cards.forEach(c=>obs.observe(c));
+
+// PROFILE
+profileBtn.onclick=()=>{
+profileCard.classList.add("active");
+profileBtn.style.display="none";
+document.getElementById("avatar").style.display="block";
+document.getElementById("contactBtn").style.display="block";
+}
+
+// SHADER SLIDE
+function openShader(){
+shaderSlide1.style.display="none";
+shaderSlide2.style.display="block";
+}
+
+// VPS
+vpsBtn.onclick=()=>{
+vpsCard.classList.add("active");
+vpsList.style.display="block";
+vpsBtn.style.display="none";
+}
+
+// POPUP PREMIUM
+function openPopup(){premiumPopup.style.display="flex"}
+function closePopup(){premiumPopup.style.display="none"}
+
+// === DYNAMIC LINKS & IMAGES ===
+document.getElementById("avatar").src = files.avatar;
+document.getElementById("shader1").src = files.shader1;
+document.getElementById("shader2").src = files.shader2;
+document.getElementById("shader3").src = files.shader3;
+document.getElementById("downloadXV1").href = files.shaderXV1;
+
+document.getElementById("waLink").href = "https://wa.me/"+contacts.wa;
+document.getElementById("tgLink").href = "https://t.me/"+contacts.tg;
+document.getElementById("contactBtn").href = "https://wa.me/"+contacts.wa;
+</script>
+
+</body>
+</html>
