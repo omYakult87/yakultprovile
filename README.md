@@ -1,2 +1,0 @@
-# yakultprovile
-asucukimai
