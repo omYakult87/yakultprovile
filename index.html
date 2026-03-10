@@ -5,7 +5,8 @@
 <title>VD Webploy</title>
 
 <!-- GOOGLE ADSENSE -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7247928249803767"
+     crossorigin="anonymous"></script>
 
 <style>
 body{
@@ -116,7 +117,7 @@ VD
 <span>webploy</span>
 </div>
 
-<p>Masukan API key untuk mendapatkan akses deploy</p>
+<p>Masukan API key untuk mendapatkan akses penuh</p>
 <input type="text" id="apikey" placeholder="API Key">
 <p class="api-info">
 Kamu belum punya API key? <a href="https://yaakultxd.vercel.app/" target="_blank">Klik di sini</a>
@@ -140,16 +141,17 @@ Kamu belum punya API key? <a href="https://yaakultxd.vercel.app/" target="_blank
   <div class="popupBox">
     <h3 id="popupTitle">Info</h3>
     <p id="popupText"></p>
+    <button id="watchAdBtn" onclick="watchAd()">Tonton Iklan</button>
     <button onclick="closePopup()">Tutup</button>
     <img id="popupImg" src="qrpay.png" width="200" style="display:none;margin-top:10px">
-  </div>
+</div>
 </div>
 
 <script>
 let limitKey = "vd_limit";
 let limit = parseInt(localStorage.getItem(limitKey)) || 0;
-let adsWatched = parseInt(localStorage.getItem("vd_ads")) || 0;
 const maxLimit = 3;
+
 updateLimitDisplay();
 
 function deploy(){
@@ -173,7 +175,7 @@ function deploy(){
   }
 
   if(limit >= maxLimit){
-    showPopup("Limit habis","Waduh, limit deploy kamu habis. Tonton 3 iklan untuk mendapatkan limit kembali");
+    showPopup("Limit habis","Waduh, limit deploy kamu habis. Klik 'Tonton Iklan' di popup untuk menambah limit.");
     return;
   }
 
@@ -207,22 +209,18 @@ function closePopup(){
   document.getElementById("popup").style.display="none";
 }
 
-// Watch Ads -> reset limit
+// Watch Ads -> tambah 1 limit
 function watchAd(){
-  adsWatched++;
-  localStorage.setItem("vd_ads",adsWatched);
-  if(adsWatched>=3){
-    limit = 0;
+  if(limit < maxLimit){
+    limit++;
     localStorage.setItem(limitKey,limit);
-    adsWatched = 0;
-    localStorage.setItem("vd_ads",adsWatched);
     updateLimitDisplay();
-    showPopup("Limit reset","Kamu sudah menonton 3 iklan, limit deploy direset",false);
-  }else{
-    showPopup("Iklan ditonton","Tonton iklan lagi untuk menambah limit",false);
+    showPopup("Limit bertambah","Kamu menonton iklan, limit deploy bertambah 1");
+  } else {
+    showPopup("Limit penuh","Limit deploy kamu sudah penuh");
   }
 }
 </script>
 
 </body>
-</html>
+  </html>
